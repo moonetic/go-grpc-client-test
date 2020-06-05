@@ -11,7 +11,7 @@ import (
 
 func main() {
 
-	http.HandleFunc("/sayHello", func(writer http.ResponseWriter, request *http.Request) {
+	http.HandleFunc("/send_message", func(writer http.ResponseWriter, request *http.Request) {
 
 		var conn *grpc.ClientConn
 
