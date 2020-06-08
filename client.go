@@ -2,10 +2,10 @@ package main
 
 import (
 	"fmt"
+	"github.com/moonetic/grpc-proto-test"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"log"
-	"moonetic.com/grpc-client-test/message"
 	"net/http"
 )
 
