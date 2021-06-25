@@ -7,6 +7,7 @@ import (
 	"google.golang.org/grpc"
 	"log"
 	"net/http"
+	"os"
 )
 
 func main() {
@@ -14,8 +15,7 @@ func main() {
 	http.HandleFunc("/send_message", func(writer http.ResponseWriter, request *http.Request) {
 
 		var conn *grpc.ClientConn
-
-		conn, err := grpc.Dial(":9000", grpc.WithInsecure())
+		conn, err := grpc.Dial(os.Getenv("SERVER_HOST"), grpc.WithInsecure())
 		if err != nil {
 			fmt.Fprintf(writer, "could not connect: %s", err)
 			return

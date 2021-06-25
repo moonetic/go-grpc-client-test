@@ -1,0 +1,19 @@
+version: '3.5'
+services:
+  app:
+    container_name: client_app
+    build: .
+    environment:
+      - SERVER_HOST=server:9000
+    ports:
+      - "80:8080"
+    restart: on-failure
+    external_links:
+      - server_app:server
+    networks:
+      - grpc
+
+networks:
+  grpc:
+    external:
+      name: grpc_test

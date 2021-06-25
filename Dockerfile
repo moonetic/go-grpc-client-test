@@ -1,18 +1,35 @@
-FROM golang:1.14.4-alpine3.12
+# Start from golang base image
+FROM golang:alpine as builder
 
-ENV GO111MODULE=on
+# ENV GO111MODULE=on
 
+# Install git.
+# Git is required for fetching the dependencies.
+RUN apk update && apk add --no-cache git
+
+# Set the current working directory inside the container
 WORKDIR /app
 
-COPY go.mod .
-COPY go.sum .
+# Copy go mod and sum files
+COPY go.mod go.sum ./
 
+# Download all dependencies. Dependencies will be cached if the go.mod and the go.sum files are not changed
 RUN go mod download
 
+# Copy the source from the current directory to the working Directory inside the container
 COPY . .
 
-RUN go build -o main .
+# Build the Go app
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .
 
-EXPOSE 9000
+# Start a new stage from scratch
+FROM alpine:latest
+RUN apk --no-cache add ca-certificates
 
-CMD ["/app/main"]
+WORKDIR /root/
+
+# Copy the Pre-built binary file from the previous stage.
+COPY --from=builder /app/main .
+
+#Command to run the executable
+CMD ["./main"]
